@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b100e">
+  <meta name="description" content="A calm, simple daily habit tracker. Build your routine one day at a time.">
+  <title>RESET — Daily Tracker</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <style>
+    :root{color-scheme:dark;--bg:#0b100e;--panel:#121a16;--panel2:#17211c;--line:#26352d;--text:#edf5ef;--muted:#91a197;--green:#8ce0a7;--green2:#3b9c61;--amber:#e6bd75;--red:#b77b79;--radius:22px}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b3527 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    button{font:inherit;color:inherit}button:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+    .wrap{width:min(100% - 32px,760px);margin:0 auto;padding:28px 0 calc(40px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}.brand{display:flex;gap:12px;align-items:center}.mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#a6f0b8,#3e9c64);display:grid;place-items:center;color:#0b1a10;font-weight:900;font-size:20px;box-shadow:0 8px 30px #5ec27c24}.brand-name{font-weight:800;letter-spacing:.17em;font-size:13px}.brand-sub{font-size:11px;color:var(--muted);letter-spacing:.08em}.local{border:1px solid var(--line);padding:7px 11px;border-radius:99px;color:var(--muted);font-size:11px;letter-spacing:.08em}
+    .eyebrow{color:var(--green);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:750}.hero{margin:10px 0 24px}.hero h1{font-size:clamp(30px,7vw,46px);letter-spacing:-.055em;line-height:1.08;margin:8px 0 10px}.hero p{color:var(--muted);margin:0;max-width:460px}
+    .panel{background:linear-gradient(145deg,#16211b,#111814);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin:16px 0;box-shadow:0 16px 45px #0002}.date-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.date-title{font-size:19px;font-weight:750;letter-spacing:-.03em}.date-nav{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:12px;background:#17221c;cursor:pointer;color:var(--muted);font-size:18px}.icon-btn:disabled{opacity:.3;cursor:not-allowed}
+    .progress-row{display:flex;align-items:end;justify-content:space-between;margin:23px 0 9px}.progress-number{font-size:34px;font-weight:800;letter-spacing:-.06em}.progress-label{color:var(--muted);font-size:12px}.track{height:8px;background:#27342d;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#4ba96b,#a2edb5);border-radius:99px;transition:width .35s ease}
+    .habits{display:grid;gap:10px;margin-top:20px}.habit{display:flex;align-items:center;gap:13px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#111914;cursor:pointer;transition:border-color .2s,transform .2s}.habit:active{transform:scale(.99)}.habit.done{border-color:#427c55;background:#15251b}.check{width:24px;height:24px;border:1.5px solid #506257;border-radius:8px;display:grid;place-items:center;flex:none;color:#0b1a10;font-weight:900;transition:all .2s}.habit.done .check{background:var(--green);border-color:var(--green)}.habit-copy{flex:1}.habit-title{font-weight:650}.habit-note{font-size:12px;color:var(--muted);margin-top:2px}.habit-emoji{font-size:22px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#111914;border:1px solid var(--line);border-radius:18px;padding:16px}.stat-value{font-size:27px;font-weight:800;letter-spacing:-.05em}.stat-label{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    .calendar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.calendar-month{font-weight:750}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;background:var(--green)}.dot.partial{background:var(--amber)}.dot.missed{background:#795454}.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;text-align:center}.week{color:#718177;font-size:10px;margin-bottom:8px}.day{aspect-ratio:1;border:1px solid transparent;border-radius:12px;background:#111914;color:#aab7ae;display:grid;place-items:center;font-size:12px;position:relative;cursor:pointer}.day:disabled{opacity:.22;cursor:default}.day.selected{border-color:var(--green);color:var(--green);background:#1b3022}.day.complete:after,.day.partial:after,.day.missed:after{content:"";position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--green)}.day.partial:after{background:var(--amber)}.day.missed:after{background:#93615f}.day.today{font-weight:850}
+    .foot{text-align:center;color:#718177;font-size:11px;margin-top:24px}.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#e0f5e6;color:#142319;padding:10px 16px;border-radius:99px;font-size:12px;font-weight:700;transition:.25s;box-shadow:0 8px 30px #0005}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .start-note{border:1px solid #365441;background:#14251a;color:#b9d9c2;border-radius:14px;padding:13px 15px;font-size:13px;margin-top:15px}
+    @media(min-width:650px){.wrap{padding-top:42px}.panel{padding:24px}.stats{grid-template-columns:1fr 1fr}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="brand"><div class="mark">R</div><div><div class="brand-name">RESET</div><div class="brand-sub">DAILY TRACKER</div></div></div>
+      <div class="local">● &nbsp; ON THIS DEVICE</div>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">Small steps. Real change.</div>
+      <h1>Reset your day.<br><span style="color:var(--green)">Build your rhythm.</span></h1>
+      <p>Consistency over perfection. Show up for the three habits that matter, one day at a time.</p>
+    </section>
+    <section class="panel" aria-label="Daily habits">
+      <div class="date-head"><div><div class="eyebrow">Your day</div><div class="date-title" id="selectedDate">Saturday, 28 November</div></div><div class="date-nav"><button class="icon-btn" id="prevDay" aria-label="Previous day">‹</button><button class="icon-btn" id="nextDay" aria-label="Next day">›</button></div></div>
+      <div class="progress-row"><div><div class="progress-label">DAILY PROGRESS</div><div class="progress-number" id="progress">0%</div></div><div class="progress-label" id="doneCount">0 of 3 completed</div></div>
+      <div class="track"><div class="fill" id="progressFill"></div></div>
+      <div class="habits" id="habits">
+        <button class="habit" data-index="0" type="button"><span class="check" aria-hidden="true"></span><span class="habit-copy"><span class="habit-title">Sleep on time</span><span class="habit-note">Give tomorrow a better start</span></span><span class="habit-emoji">🌙</span></button>
+        <button class="habit" data-index="1" type="button"><span class="check" aria-hidden="true"></span><span class="habit-copy"><span class="habit-title">Eat meals on time</span><span class="habit-note">Keep a steady meal routine</span></span><span class="habit-emoji">🥗</span></button>
+        <button class="habit" data-index="2" type="button"><span class="check" aria-hidden="true"></span><span class="habit-copy"><span class="habit-title">Avoid excessive phone use</span><span class="habit-note">Be intentional with screen time</span></span><span class="habit-emoji">📵</span></button>
+      </div>
+      <div class="start-note" id="startNote" hidden>Your RESET journey begins on 28 November 2026. Get ready for a fresh start.</div>
+    </section>
+    <section class="stats" aria-label="Streak statistics">
+      <div class="stat"><div class="eyebrow">Current streak</div><div class="stat-value" id="currentStreak">0 days</div><div class="stat-label">Consecutive full days</div></div>
+      <div class="stat"><div class="eyebrow">Personal best</div><div class="stat-value" id="bestStreak">0 days</div><div class="stat-label">Your longest streak</div></div>
+    </section>
+    <section class="panel" aria-label="Calendar history">
+      <div class="calendar-top"><div><div class="eyebrow">Your consistency</div><div class="calendar-month" id="monthLabel">November 2026</div></div><div class="date-nav"><button class="icon-btn" id="prevMonth" aria-label="Previous month">‹</button><button class="icon-btn" id="nextMonth" aria-label="Next month">›</button></div></div>
+      <div class="week"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+      <div class="days" id="calendar"></div>
+      <div class="legend" style="margin-top:16px"><span><i class="dot"></i> Complete</span><span><i class="dot partial"></i> Partial</span><span><i class="dot missed"></i> Missed</span></div>
+    </section>
+    <div class="foot">Your progress is saved privately on this device. Keep going.</div>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+  (() => {
+    "use strict";
+    const START = "2026-11-28";
+    const KEY = "reset-daily-tracker-v1";
+    const $ = id => document.getElementById(id);
+    const parse = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d,12); };
+    const iso = d => [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+    const today = () => iso(new Date());
+    const fmt = (s, opts={weekday:"long",day:"numeric",month:"long"}) => parse(s).toLocaleDateString("en-GB",opts);
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch { data = {}; }
+    let selected = today() < START ? START : today();
+    let month = parse(selected);
+    const canEdit = s => s >= START && s <= today();
+    const record = s => Array.isArray(data[s]) ? data[s].slice(0,3).map(Boolean) : [false,false,false];
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch { toast("Could not save — device storage may be full."); } };
+    let toastTimer;
+    function toast(msg){ const el=$("toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),1900); }
+    function stats(){
+      let current=0,best=0,run=0;
+      const end = today() < START ? START : today();
+      const cursor=parse(end);
+      for(let d=parse(START); iso(d)<=end; d.setDate(d.getDate()+1)){
+        const key=iso(d), full=record(key).every(Boolean);
+        if(full){run++;best=Math.max(best,run);} else run=0;
+      }
+      current=run;
+      $("currentStreak").textContent=current+" "+(current===1?"day":"days");
+      $("bestStreak").textContent=best+" "+(best===1?"day":"days");
+    }
+    function renderDay(){
+      const vals=record(selected), count=vals.filter(Boolean).length, allowed=canEdit(selected);
+      $("selectedDate").textContent=fmt(selected);
+      $("progress").textContent=Math.round(count/3*100)+"%";
+      $("doneCount").textContent=count+" of 3 completed";
+      $("progressFill").style.width=(count/3*100)+"%";
+      document.querySelectorAll(".habit").forEach((el,i)=>{
+        el.classList.toggle("done",vals[i]);
+        el.querySelector(".check").textContent=vals[i]?"✓":"";
+        el.disabled=!allowed;
+        el.style.opacity=allowed?"1":".55";
+        el.setAttribute("aria-pressed",String(vals[i]));
+      });
+      $("startNote").hidden=!(today()<START && selected===START);
+      $("prevDay").disabled=selected<=START;
+      $("nextDay").disabled=selected>=today();
+      renderCalendar();stats();
+    }
+    function renderCalendar(){
+      const y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1,12),offset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+      $("monthLabel").textContent=first.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+      $("prevMonth").disabled=(y===2026&&m===10);
+      const last=new Date();$("nextMonth").disabled=(y>last.getFullYear()||(y===last.getFullYear()&&m>=last.getMonth()));
+      const grid=$("calendar");grid.innerHTML="";
+      for(let i=0;i<offset;i++){const blank=document.createElement("span");grid.append(blank);}
+      for(let n=1;n<=days;n++){
+        const d=new Date(y,m,n,12),key=iso(d),vals=record(key),count=vals.filter(Boolean).length,btn=document.createElement("button");
+        btn.type="button";btn.className="day";btn.textContent=n;
+        if(key===selected)btn.classList.add("selected");
+        if(key===today())btn.classList.add("today");
+        if(key>=START&&key<=today()){
+          if(count===3)btn.classList.add("complete");else if(count>0)btn.classList.add("partial");else if(key<today())btn.classList.add("missed");
+        } else btn.disabled=true;
+        btn.setAttribute("aria-label",fmt(key,{day:"numeric",month:"long",year:"numeric"})+(count===3?", complete":count?" , partial":", no habits completed"));
+        btn.addEventListener("click",()=>{selected=key;renderDay();});
+        grid.append(btn);
+      }
+    }
+    $("habits").addEventListener("click",e=>{
+      const btn=e.target.closest(".habit");if(!btn||!canEdit(selected))return;
+      const i=Number(btn.dataset.index),vals=record(selected);vals[i]=!vals[i];data[selected]=vals;save();renderDay();
+    });
+    $("prevDay").addEventListener("click",()=>{const d=parse(selected);d.setDate(d.getDate()-1);if(iso(d)>=START){selected=iso(d);month=d;renderDay();}});
+    $("nextDay").addEventListener("click",()=>{const d=parse(selected);d.setDate(d.getDate()+1);if(iso(d)<=today()){selected=iso(d);month=d;renderDay();}});
+    $("prevMonth").addEventListener("click",()=>{month.setMonth(month.getMonth()-1);renderCalendar();});
+    $("nextMonth").addEventListener("click",()=>{month.setMonth(month.getMonth()+1);renderCalendar();});
+    if("serviceWorker" in navigator && location.protocol.startsWith("http")) window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));
+    renderDay();
+  })();
+  </script>
+</body>
+</html>
